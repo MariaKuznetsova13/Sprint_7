@@ -16,9 +16,8 @@ class TestCreateCourier:
     @allure.description('Проверяем, что при создании двух одинаковых курьеров возвращается ошибка')
     def test_create_dup_courier(self, courier):
         first_response = requests.post(Urls.CREATE_COURIER_URL, json=courier)
-        if first_response.status_code == 201:
-            second_response = requests.post(Urls.CREATE_COURIER_URL, json=courier)
-            assert second_response.status_code == 409 and second_response.json()['message'] == ResponsesText.DUB_COURIER_MESSAGE
+        second_response = requests.post(Urls.CREATE_COURIER_URL, json=courier)
+        assert second_response.status_code == 409 and second_response.json()['message'] == ResponsesText.DUB_COURIER_MESSAGE
 
     @allure.title('Создание курьера без логина')
     @allure.description('Проверяем, что при создании курьера без логина возвращается ошибка')
@@ -40,12 +39,11 @@ class TestCreateCourier:
     @allure.description('Проверяем, что при создании двух курьеров с одинаковым логином возвращается ошибка')
     def test_create_courier_with_same_login(self, courier):
         first_response = requests.post(Urls.CREATE_COURIER_URL, json=courier)
-        if first_response.status_code == 201:
-            new_courier = {
+        new_courier = {
                 "login": courier['login'],
                 "password": "1234567",
                 "firstName": "Maiz"
             }
-            second_response = requests.post(Urls.CREATE_COURIER_URL, json=new_courier)
-            assert second_response.status_code == 409 and second_response.json()[
+        second_response = requests.post(Urls.CREATE_COURIER_URL, json=new_courier)
+        assert second_response.status_code == 409 and second_response.json()[
                 'message'] == ResponsesText.DUB_COURIER_MESSAGE
